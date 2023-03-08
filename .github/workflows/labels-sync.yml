@@ -1,16 +1,18 @@
 name: Sync labels
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+    inputs:
+      repo:
+        required: true
+        default: ivyxjc/label-sync
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: micnncim/action-label-syncer@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v3
         with:
-          manifest: labels.yml
+          node-version: 16
+      - run: npm install -g github-label-sync
+      - run: github-label-sync --labels labels.yml ${{github.event.inputs.repo}} --access-token ${{secrets.USER_GITHUB_TOKEN}}
