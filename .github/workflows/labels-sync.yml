@@ -15,4 +15,10 @@ jobs:
         with:
           node-version: 16
       - run: npm install -g github-label-sync
-      - run: github-label-sync --labels labels.yml ${{github.event.inputs.repo}} --access-token ${{secrets.USER_GITHUB_TOKEN}}
+
+      - name: user repo sync
+        if: ${{ startsWith(github.event.inputs.repo, 'ivyxjc') }}
+        run: github-label-sync --labels labels.yml ${{github.event.inputs.repo}} --access-token ${{secrets.USER_GITHUB_TOKEN}}
+      - name: org CleverCastle repo sync
+        if: ${{ startsWith(github.event.inputs.repo, 'clevercastle') }}
+        run: github-label-sync --labels labels.yml ${{github.event.inputs.repo}} --access-token ${{secrets.CLEVER_CASTLE_GITHUB_TOKEN}}
